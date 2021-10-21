@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Ubuntu:wght@300&display=swap');
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
+.header {
+    background-color: #4d6a4f;
+    color: #e0ded0;
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}
+
+h2, a{
+    font-size: 36px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #e0ded0;
+    font-family: "Press start 2P";
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-attachment: fixed;
+    height: 100%;
+}
+
+.book-repository {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-button {
+    height: 20vh;
+    width: 20vh;
+    border: 1px solid rgb(42, 42, 42);
+    border-radius: 50%;
+    background-attachment: rgb(37, 37, 37);
+    color: rgb(105, 105, 105);
+    font-size: 100px;
+}
+
+.footer {
+    background-color: #4d6a4f;
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}
