@@ -11,10 +11,27 @@
             <h2>Library</h2>
         </div>
         <div class="book-repository">
-            <button class="add-button">+</button>
+            <button class="add">+</button>
         </div>
         <div class="footer">
             <a href="https://github.com/chri-ss">https://github.com/chri-ss</a>
         </div>
     </div>
+    <div class="modal hidden">
+        <div class="header">
+            <h2>Add a book</h2>
+        </div>
+        <form class="inputs">
+            <label>Title</label>
+            <input type="text" name="title">
+            <label>Author</label>
+            <input type="text" name="author">
+            <label># of Pages</label>
+            <input type="text" name="pages">
+            <label>Read?</label>
+            <input type="checkbox" name="read">
+            <button>Submit</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
 </body>
