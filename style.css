@@ -73,13 +73,13 @@ h2, a{
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: rgb(191, 216, 203);
-    height: 50vh;
-    width: 20vw;
-    max-width: 100%;
-    max-height: 100%;
     border: 2px solid #4d6a4f;
     border-radius: 5px;
     text-align: center;
+}
+
+.modal-content  {
+    padding: 5rem;
 }
 
 .inputs {
