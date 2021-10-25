@@ -1,8 +1,10 @@
-let addButton = document.querySelector('.add');
-let modal = document.querySelector('.modal');
-let submit = document.querySelector('.submit');
+const addButton = document.querySelector('.add');
+const modal = document.querySelector('.modal');
+const submit = document.querySelector('.submit');
+const read = document.querySelector('.read')
+const bookRepository = document.querySelector('.book-repository');
+
 let myLibrary = [];
-const newBook = Object.create(Book);
 
 let inputs = Array.from(document.querySelectorAll('.inputs input'));
 
@@ -12,6 +14,18 @@ addButton.addEventListener('click', () =>  {
 
 submit.addEventListener('click', (e) => {
     e.preventDefault();
+    const newBook = Object.create(Book);
+    const read = document.querySelector('.read')
+
+    for(i = 0; i < inputs.length - 1; ++i)
+    {
+        newBook[inputs[i].name] = inputs[i].value
+    }
+    newBook.read = read.checked;
+    console.log(newBook);
+    myLibrary.push(newBook);
+    displayBooks(myLibrary);
+    modal.style.display = 'none';
 })
 
 function Book(title, author, pages, read)
@@ -29,4 +43,21 @@ function Book(title, author, pages, read)
 function addBookToLibrary(book) {
     myLibrary.push(book)
     return myLibrary;
+}
+
+function displayBooks(bookArray) {
+        const clearBooks = Array.from(bookRepository.querySelectorAll('.card'));
+        const addBtn = document.querySelector('.add')
+        clearBooks.forEach(book => {
+            bookRepository.removeChild(book);
+        })
+
+        bookRepository.removeChild(addBtn);
+        
+        bookArray.forEach(book => {
+        let newDiv = document.createElement('div');
+        newDiv.classList.add('card');
+        bookRepository.appendChild(newDiv);
+    })
+    bookRepository.appendChild(addBtn);
 }

@@ -44,7 +44,7 @@ h2, a{
 
 .card {
     height: 20vw;
-    width: 30vh;
+    width: 20vh;
     border: 1px solid black;
 }
 
@@ -56,6 +56,7 @@ h2, a{
     background-color: rgb(224, 223, 223);
     color: rgb(105, 105, 105);
     font-size: 100px;
+    text-align: center;
 }
 
 .footer {
@@ -93,4 +94,3 @@ h2, a{
 .input {
     flex-shrink: 1;
 }
-
