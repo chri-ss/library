@@ -5,6 +5,11 @@ const read = document.querySelector('.read')
 const bookRepository = document.querySelector('.book-repository');
 
 let myLibrary = [];
+for(i = 0; i < localStorage.length; ++i)
+{
+    myLibrary.push(localStorage.getItem(i));   
+}
+displayBooks(myLibrary);
 
 let inputs = Array.from(document.querySelectorAll('.inputs input'));
 
@@ -24,6 +29,13 @@ submit.addEventListener('click', (e) => {
     newBook.read = read.checked;
     console.log(newBook);
     myLibrary.push(newBook);
+    localStorage.clear();
+
+    for(i = 0; i < myLibrary.length; ++i)
+    {
+        localStorage.setItem(i, JSON.stringify(myLibrary[i]));
+    }
+
     displayBooks(myLibrary);
     modal.style.display = 'none';
 })
@@ -45,19 +57,21 @@ function addBookToLibrary(book) {
     return myLibrary;
 }
 
-function displayBooks(bookArray) {
-        const clearBooks = Array.from(bookRepository.querySelectorAll('.card'));
-        const addBtn = document.querySelector('.add')
-        clearBooks.forEach(book => {
-            bookRepository.removeChild(book);
-        })
+function clearLibrary() {
+    const clearBooks = Array.from(bookRepository.querySelectorAll('.card'));
+    clearBooks.forEach(book => {
+    bookRepository.removeChild(book);
+})
+}
 
-        bookRepository.removeChild(addBtn);
+function displayBooks(bookArray) {
+        clearLibrary();
+        bookRepository.removeChild(addButton);
         
         bookArray.forEach(book => {
         let newDiv = document.createElement('div');
         newDiv.classList.add('card');
         bookRepository.appendChild(newDiv);
     })
-    bookRepository.appendChild(addBtn);
+    bookRepository.appendChild(addButton);
 }

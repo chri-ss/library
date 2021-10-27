@@ -43,9 +43,10 @@ h2, a{
 }
 
 .card {
-    height: 20vw;
-    width: 20vh;
+    height: 30vh;
+    width: 10vw;
     border: 1px solid black;
+    flex-shrink: 1;
 }
 
 .add {
