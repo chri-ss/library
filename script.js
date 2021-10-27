@@ -7,7 +7,7 @@ const bookRepository = document.querySelector('.book-repository');
 let myLibrary = [];
 for(i = 0; i < localStorage.length; ++i)
 {
-    myLibrary.push(localStorage.getItem(i));   
+    myLibrary.push(JSON.parse(localStorage.getItem(i)));   
 }
 displayBooks(myLibrary);
 
@@ -72,6 +72,12 @@ function displayBooks(bookArray) {
         let newDiv = document.createElement('div');
         newDiv.classList.add('card');
         bookRepository.appendChild(newDiv);
+        for(key in book)
+        {
+            let para = document.createElement('p');
+            para.textContent = book[key];
+            newDiv.appendChild(para);
+        }
     })
     bookRepository.appendChild(addButton);
 }
