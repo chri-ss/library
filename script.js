@@ -74,10 +74,27 @@ function displayBooks(bookArray) {
         bookRepository.appendChild(newDiv);
         for(key in book)
         {
-            let para = document.createElement('p');
-            para.textContent = `${key}: ${book[key]}`;
-            newDiv.appendChild(para);
+            if(key === 'title')
+            {
+                makeCardTitle(book, key, newDiv);
+            }
+            else
+            {
+                makeCardSubField(book, key, newDiv);
+            }
         }
     })
     bookRepository.appendChild(addButton);
+}
+
+function makeCardTitle(book, key, div) {
+    let bookTitle = document.createElement('h3');
+    bookTitle.textContent = `${key}: ${book[key]}`
+    div.appendChild(bookTitle)
+}
+
+function makeCardSubField(book, key, div) {
+    let bookTitle = document.createElement('p');
+    bookTitle.textContent = `${key}: ${book[key]}`
+    div.appendChild(bookTitle)
 }

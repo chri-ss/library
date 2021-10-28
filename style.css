@@ -25,6 +25,10 @@ h2, a{
     font-family: "Press start 2P";
 }
 
+h3 {
+    font-size: 24px;
+}
+
 .container {
     display: flex;
     flex-direction: column;
@@ -50,6 +54,7 @@ h2, a{
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    text-align: center;
 }
 
 .add {
