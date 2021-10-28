@@ -89,7 +89,7 @@ function displayBooks(bookArray) {
 
 function makeCardTitle(book, key, div) {
     let bookTitle = document.createElement('h3');
-    bookTitle.textContent = `${key}: ${book[key]}`
+    bookTitle.textContent = book[key];
     div.appendChild(bookTitle)
 }
 
