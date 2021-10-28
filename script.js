@@ -75,7 +75,7 @@ function displayBooks(bookArray) {
         for(key in book)
         {
             let para = document.createElement('p');
-            para.textContent = book[key];
+            para.textContent = `${key}: ${book[key]}`;
             newDiv.appendChild(para);
         }
     })
