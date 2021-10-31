@@ -1,15 +1,17 @@
 const addButton = document.querySelector('.add');
 const modal = document.querySelector('.modal');
 const submit = document.querySelector('.submit');
-const read = document.querySelector('.read')
 const bookRepository = document.querySelector('.book-repository');
 
 let myLibrary = [];
 for(i = 0; i < localStorage.length; ++i)
 {
-    myLibrary.push(JSON.parse(localStorage.getItem(i)));   
+    myLibrary.push(JSON.parse(localStorage.getItem(i)));
 }
+addReadToggle(myLibrary);
 displayBooks(myLibrary);
+
+const read = document.querySelector('.read')
 
 let inputs = Array.from(document.querySelectorAll('.inputs input'));
 
@@ -17,9 +19,11 @@ addButton.addEventListener('click', () =>  {
     modal.style.display = 'flex';
 })
 
+const checkbox = Array.from(document.querySelectorAll('.checkbox'));
+
 submit.addEventListener('click', (e) => {
     e.preventDefault();
-    const newBook = Object.create(Book);
+    let newBook = Object.create(Book);
     const read = document.querySelector('.read')
 
     for(i = 0; i < inputs.length - 1; ++i)
@@ -31,11 +35,10 @@ submit.addEventListener('click', (e) => {
     myLibrary.push(newBook);
     localStorage.clear();
 
-    for(i = 0; i < myLibrary.length; ++i)
+    for(let i = 0; i < myLibrary.length; ++i)
     {
         localStorage.setItem(i, JSON.stringify(myLibrary[i]));
     }
-
     displayBooks(myLibrary);
     modal.style.display = 'none';
 })
@@ -46,8 +49,7 @@ function Book(title, author, pages, read)
     this.author = author;
     this.pages = pages;
     this.read = read;
-    this.info = function() 
-    {
+    this.info = function() {
         return `${title} by ${author}, ${pages} pages, ${read} read yet.`
     }
 }
@@ -66,25 +68,34 @@ function clearLibrary() {
 
 function displayBooks(bookArray) {
         clearLibrary();
-        bookRepository.removeChild(addButton);
         
+        let i = 0;
+
+        bookRepository.removeChild(addButton);
         bookArray.forEach(book => {
         let newDiv = document.createElement('div');
-        newDiv.classList.add('card');
-        bookRepository.appendChild(newDiv);
+        makeNewCard(newDiv);
         for(key in book)
         {
             if(key === 'title')
             {
                 makeCardTitle(book, key, newDiv);
             }
-            else
+            else if(key === 'pages' || key === 'author' || key === 'read')
             {
                 makeCardSubField(book, key, newDiv);
             }
         }
+        addCheckBox(newDiv, i);
+        ++i;
+
     })
     bookRepository.appendChild(addButton);
+}
+
+function makeNewCard(div) {
+    div.classList.add('card');
+    bookRepository.appendChild(div);
 }
 
 function makeCardTitle(book, key, div) {
@@ -94,7 +105,34 @@ function makeCardTitle(book, key, div) {
 }
 
 function makeCardSubField(book, key, div) {
-    let bookTitle = document.createElement('p');
-    bookTitle.textContent = `${key}: ${book[key]}`
-    div.appendChild(bookTitle)
+    let bookField = document.createElement('p');
+    bookField.textContent = `${key}: ${book[key]}`;
+    div.appendChild(bookField);
+}
+
+function addCheckBox(div, i) {
+    let label = document.createElement('label');
+    let read = document.createElement('input');
+    read.type = 'checkbox';
+    read.classList.add(`${i}`)
+    read.classList.add('checkbox');
+
+    div.appendChild(read);
+}
+
+function addReadToggle(library) {
+    for (i = 0; i < library.length; ++i)
+    {
+        library[i].readToggle = function() {
+        if(this.read === true)
+        {
+            this.read = false;
+        }
+        else if(this.read === false)
+        {
+            this.read = true;
+        }
+        displayBooks(myLibrary);
+        }
+    }
 }
