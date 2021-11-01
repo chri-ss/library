@@ -19,13 +19,6 @@ addButton.addEventListener('click', () =>  {
     modal.style.display = 'flex';
 })
 
-const checkbox = Array.from(document.querySelectorAll('.checkbox'));
-
-checkbox.forEach(box => {
-    bookIndexToChange = parseInt(box.classList[0]);
-    box.addEventListener('toggle', console.log(bookIndexToChange));
-})
-
 submit.addEventListener('click', (e) => {
     e.preventDefault();
     let newBook = Object.create(Book);
@@ -93,6 +86,13 @@ function displayBooks(bookArray) {
         }
         addCheckBox(newDiv, i);
         ++i;
+        let checkbox = Array.from(document.querySelectorAll('.checkbox'));
+
+        checkbox.forEach(box => {
+            box.addEventListener('change', () => {
+            myLibrary[box.classList[0]].readToggle();
+    })
+})
 
     })
     bookRepository.appendChild(addButton);
@@ -119,10 +119,13 @@ function addCheckBox(div, i) {
     let label = document.createElement('label');
     let read = document.createElement('input');
     read.type = 'checkbox';
+    read.name = 'checkbox';
     read.classList.add(`${i}`)
     read.classList.add('checkbox');
 
     div.appendChild(read);
+
+    
 }
 
 function addReadToggle(library) {
@@ -138,9 +141,9 @@ function addReadToggle(library) {
             this.read = true;
         }
         for(let i = 0; i < myLibrary.length; ++i)
-    {
-        localStorage.setItem(i, JSON.stringify(myLibrary[i]));
-    }
+        {
+            localStorage.setItem(i, JSON.stringify(myLibrary[i]));
+        }
         displayBooks(myLibrary);
         }
     }
