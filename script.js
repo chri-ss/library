@@ -37,6 +37,7 @@ submit.addEventListener('click', (e) => {
     {
         localStorage.setItem(i, JSON.stringify(myLibrary[i]));
     }
+    addReadToggle(myLibrary);
     displayBooks(myLibrary);
     modal.style.display = 'none';
 })
@@ -86,16 +87,15 @@ function displayBooks(bookArray) {
         }
         addCheckBox(newDiv, i);
         ++i;
-        let checkbox = Array.from(document.querySelectorAll('.checkbox'));
-
-        checkbox.forEach(box => {
-            box.addEventListener('change', () => {
-            myLibrary[box.classList[0]].readToggle();
-    })
-})
-
     })
     bookRepository.appendChild(addButton);
+    let checkbox = Array.from(document.querySelectorAll('.checkbox'));
+
+    checkbox.forEach(box => {
+        box.addEventListener('change', () => {
+            myLibrary[box.classList[0]].readToggle();
+        })
+    })
 }
 
 function makeNewCard(div) {
