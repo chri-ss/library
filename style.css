@@ -66,6 +66,11 @@ h3 {
     height: 1rem;
 }
 
+.close {
+    order: 1;
+    width: 80%;
+}
+
 .add {
     height: 20vh;
     width: 20vh;

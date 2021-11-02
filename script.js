@@ -21,6 +21,7 @@ addButton.addEventListener('click', () =>  {
 
 submit.addEventListener('click', (e) => {
     e.preventDefault();
+
     let newBook = Object.create(Book);
     const read = document.querySelector('.read')
 
@@ -74,6 +75,7 @@ function displayBooks(bookArray) {
         bookArray.forEach(book => {
         let newDiv = document.createElement('div');
         makeNewCard(newDiv);
+        addXButton(newDiv);
         for(key in book)
         {
             if(key === 'title')
@@ -96,11 +98,19 @@ function displayBooks(bookArray) {
             myLibrary[box.classList[0]].readToggle();
         })
     })
+
 }
 
 function makeNewCard(div) {
     div.classList.add('card');
     bookRepository.appendChild(div);
+}
+
+function addXButton(div) {
+    let xButton = document.createElement('button');
+    xButton.textContent = 'Delete';
+    xButton.classList.add('close');
+    div.appendChild(xButton);
 }
 
 function makeCardTitle(book, key, div) {
@@ -124,8 +134,6 @@ function addCheckBox(div, i) {
     read.classList.add('checkbox');
 
     div.appendChild(read);
-
-    
 }
 
 function addReadToggle(library) {
