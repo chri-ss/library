@@ -87,18 +87,18 @@ function displayBooks(bookArray) {
                 makeCardSubField(book, key, newDiv);
             }
         }
-        addCheckBox(newDiv, i);
+        addReadToggleButton(newDiv, i);
         ++i;
     })
     bookRepository.appendChild(addButton);
-    let checkbox = Array.from(document.querySelectorAll('.checkbox'));
 
-    checkbox.forEach(box => {
-        box.addEventListener('change', () => {
-            myLibrary[box.classList[0]].readToggle();
+    let readToggleButtons = Array.from(document.querySelectorAll('.read-button'));
+
+    readToggleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            myLibrary[button.classList[0]].readToggle();
         })
     })
-
 }
 
 function makeNewCard(div) {
@@ -125,13 +125,11 @@ function makeCardSubField(book, key, div) {
     div.appendChild(bookField);
 }
 
-function addCheckBox(div, i) {
-    let label = document.createElement('label');
-    let read = document.createElement('input');
-    read.type = 'checkbox';
-    read.name = 'checkbox';
+function addReadToggleButton(div, i) {
+    let read = document.createElement('button');
     read.classList.add(`${i}`)
-    read.classList.add('checkbox');
+    read.textContent = 'read?'
+    read.classList.add('read-button');
 
     div.appendChild(read);
 }
