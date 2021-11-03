@@ -9,6 +9,7 @@ for(i = 0; i < localStorage.length; ++i)
     myLibrary.push(JSON.parse(localStorage.getItem(i)));
 }
 addReadToggle(myLibrary);
+addDeleteBook(myLibrary);
 displayBooks(myLibrary);
 
 const read = document.querySelector('.read')
@@ -39,6 +40,7 @@ submit.addEventListener('click', (e) => {
         localStorage.setItem(i, JSON.stringify(myLibrary[i]));
     }
     addReadToggle(myLibrary);
+    addDeleteBook(myLibrary);
     displayBooks(myLibrary);
     modal.style.display = 'none';
 })
@@ -68,6 +70,10 @@ function clearLibrary() {
 
 function displayBooks(bookArray) {
         clearLibrary();
+        for(let i = 0; i < myLibrary.length; ++i)
+        {
+            localStorage.setItem(i, JSON.stringify(myLibrary[i]));
+        }
         
         let i = 0;
 
@@ -75,7 +81,6 @@ function displayBooks(bookArray) {
         bookArray.forEach(book => {
         let newDiv = document.createElement('div');
         makeNewCard(newDiv);
-        addXButton(newDiv);
         for(key in book)
         {
             if(key === 'title')
@@ -88,6 +93,7 @@ function displayBooks(bookArray) {
             }
         }
         addReadToggleButton(newDiv, i);
+        addDeleteButton(newDiv, i);
         ++i;
     })
     bookRepository.appendChild(addButton);
@@ -99,6 +105,14 @@ function displayBooks(bookArray) {
             myLibrary[button.classList[0]].readToggle();
         })
     })
+
+    let deleteButtons = Array.from(document.querySelectorAll('.delete'));
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            myLibrary[button.classList[0]].delete();
+        })
+    })
 }
 
 function makeNewCard(div) {
@@ -106,11 +120,12 @@ function makeNewCard(div) {
     bookRepository.appendChild(div);
 }
 
-function addXButton(div) {
-    let xButton = document.createElement('button');
-    xButton.textContent = 'Delete';
-    xButton.classList.add('close');
-    div.appendChild(xButton);
+function addDeleteButton(div, i) {
+    let deleteButton = document.createElement('button');
+    deleteButton.classList.add(`${i}`);
+    deleteButton.textContent = 'Delete';
+    deleteButton.classList.add('delete');
+    div.appendChild(deleteButton);
 }
 
 function makeCardTitle(book, key, div) {
@@ -121,21 +136,32 @@ function makeCardTitle(book, key, div) {
 
 function makeCardSubField(book, key, div) {
     let bookField = document.createElement('p');
-    bookField.textContent = `${key}: ${book[key]}`;
+    if(key === 'author')
+    {
+        bookField.textContent = `by ${book[key]}`;
+    }
+    else if(key === 'pages')
+    {
+        bookField.textContent = `${book[key]} pages`;
+    }
+    else if(key === 'read')
+    {
+        book[key] === true ? bookField.textContent = 'read' : bookField.textContent = 'not yet read';
+    }
     div.appendChild(bookField);
 }
 
 function addReadToggleButton(div, i) {
     let read = document.createElement('button');
-    read.classList.add(`${i}`)
-    read.textContent = 'read?'
+    read.classList.add(`${i}`);
+    read.textContent = 'read?';
     read.classList.add('read-button');
 
     div.appendChild(read);
 }
 
 function addReadToggle(library) {
-    for (i = 0; i < library.length; ++i)
+    for (let i = 0; i < library.length; ++i)
     {
         library[i].readToggle = function() {
         if(this.read === true)
@@ -151,6 +177,17 @@ function addReadToggle(library) {
             localStorage.setItem(i, JSON.stringify(myLibrary[i]));
         }
         displayBooks(myLibrary);
+        }
+    }
+}
+
+function addDeleteBook(library, i) {
+    for(let i = 0; i < library.length; ++i)
+    {
+        library[i].delete = function() {
+            myLibrary.splice(i, 1);
+            localStorage.removeItem(i);
+            displayBooks(myLibrary);
         }
     }
 }

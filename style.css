@@ -49,7 +49,7 @@ h3 {
 
 .card {
     height: 30vh;
-    width: 10vw;
+    width: 10vh;
     min-width: 10vw;
     border: 1px solid black;
     display: flex;
@@ -61,7 +61,7 @@ h3 {
     font-family: "Bebas Neue", sans-serif;
 }
 
-.close {
+.delete {
     order: 1;
     width: 80%;
 }
