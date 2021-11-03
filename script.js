@@ -186,8 +186,9 @@ function addDeleteBook(library, i) {
     {
         library[i].delete = function() {
             myLibrary.splice(i, 1);
-            localStorage.removeItem(i);
+            localStorage.clear();
             displayBooks(myLibrary);
+            return localStorage;
         }
     }
 }
