@@ -200,11 +200,13 @@ function addDeleteBook(library, i) {
                     myLibrary.splice(i, 1);
                     localStorage.removeItem(i);
                     displayBooks(myLibrary);
+                    addDeleteBook(myLibrary);
                 }
                 else
                 {
                     myLibrary.pop();
                     localStorage.clear();
+                    displayBooks(myLibrary);
                 }
             }
         }
