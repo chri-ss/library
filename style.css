@@ -6,6 +6,7 @@ html {
 }
 
 body {
+    background-color: #e6e9dd;
     height: 100%;
     display: flex;
 }
@@ -48,6 +49,7 @@ h3 {
 }
 
 .card {
+    background-color: white;
     height: 30vh;
     width: 10vh;
     min-width: 10vw;

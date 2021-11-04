@@ -1,7 +1,7 @@
 const addButton = document.querySelector('.add');
 const modal = document.querySelector('.modal');
 const submit = document.querySelector('.submit');
-const bookRepository = document.querySelector('.book-repository');
+const bookRepository = document.querySelector('.book-repository')
 
 let myLibrary = [];
 for(i = 0; i < localStorage.length; ++i)
@@ -11,6 +11,54 @@ for(i = 0; i < localStorage.length; ++i)
 addReadToggle(myLibrary);
 addDeleteBook(myLibrary);
 displayBooks(myLibrary);
+
+function displayBooks(bookArray) {
+    clearLibrary();
+    for(let i = 0; i < myLibrary.length; ++i)
+    {
+        localStorage.setItem(i, JSON.stringify(myLibrary[i]));
+    }
+    
+    let i = 0;
+
+    bookRepository.removeChild(addButton);
+    bookArray.forEach(book => {
+    let newDiv = document.createElement('div');
+    makeNewCard(newDiv);
+    for(key in book)
+    {
+        if(key === 'title')
+        {
+            makeCardTitle(book, key, newDiv);
+        }
+        else if(key === 'pages' || key === 'author' || key === 'read')
+        {
+            makeCardSubField(book, key, newDiv);
+        }
+    }
+    addReadToggleButton(newDiv, i);
+    addDeleteButton(newDiv, i);
+    ++i;
+})
+bookRepository.appendChild(addButton);
+
+let readToggleButtons = Array.from(document.querySelectorAll('.read-button'));
+
+readToggleButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        myLibrary[button.classList[0]].readToggle();
+    })
+})
+
+let deleteButtons = Array.from(document.querySelectorAll('.delete'));
+
+deleteButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        myLibrary[button.classList[0]].delete();
+        displayBooks(myLibrary);
+    })
+})
+}
 
 const read = document.querySelector('.read')
 
@@ -68,53 +116,6 @@ function clearLibrary() {
 })
 }
 
-function displayBooks(bookArray) {
-        clearLibrary();
-        for(let i = 0; i < myLibrary.length; ++i)
-        {
-            localStorage.setItem(i, JSON.stringify(myLibrary[i]));
-        }
-        
-        let i = 0;
-
-        bookRepository.removeChild(addButton);
-        bookArray.forEach(book => {
-        let newDiv = document.createElement('div');
-        makeNewCard(newDiv);
-        for(key in book)
-        {
-            if(key === 'title')
-            {
-                makeCardTitle(book, key, newDiv);
-            }
-            else if(key === 'pages' || key === 'author' || key === 'read')
-            {
-                makeCardSubField(book, key, newDiv);
-            }
-        }
-        addReadToggleButton(newDiv, i);
-        addDeleteButton(newDiv, i);
-        ++i;
-    })
-    bookRepository.appendChild(addButton);
-
-    let readToggleButtons = Array.from(document.querySelectorAll('.read-button'));
-
-    readToggleButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            myLibrary[button.classList[0]].readToggle();
-        })
-    })
-
-    let deleteButtons = Array.from(document.querySelectorAll('.delete'));
-
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            myLibrary[button.classList[0]].delete();
-        })
-    })
-}
-
 function makeNewCard(div) {
     div.classList.add('card');
     bookRepository.appendChild(div);
@@ -161,34 +162,55 @@ function addReadToggleButton(div, i) {
 }
 
 function addReadToggle(library) {
-    for (let i = 0; i < library.length; ++i)
+    if(library[0] != null)
     {
-        library[i].readToggle = function() {
-        if(this.read === true)
+        for (let i = 0; i < library.length; ++i)
         {
-            this.read = false;
-        }
-        else if(this.read === false)
-        {
-            this.read = true;
-        }
-        for(let i = 0; i < myLibrary.length; ++i)
-        {
-            localStorage.setItem(i, JSON.stringify(myLibrary[i]));
-        }
-        displayBooks(myLibrary);
+            library[i].readToggle = function() {
+            if(this.read === true)
+            {
+                this.read = false;
+            }
+            else if(this.read === false)
+            {
+                this.read = true;
+            }
+            for(let i = 0; i < myLibrary.length; ++i)
+            {
+                localStorage.setItem(i, JSON.stringify(myLibrary[i]));
+            }
+            displayBooks(myLibrary);
         }
     }
 }
+else
+{
+    return 0;
+}
+}
 
 function addDeleteBook(library, i) {
-    for(let i = 0; i < library.length; ++i)
+    if(library[0] != null)
     {
-        library[i].delete = function() {
-            myLibrary.splice(i, 1);
-            localStorage.clear();
-            displayBooks(myLibrary);
-            return localStorage;
+        for(let i = 0; i < library.length; ++i)
+        {
+            library[i].delete = function() {
+                if(library.length != 1)
+                {
+                    myLibrary.splice(i, 1);
+                    localStorage.removeItem(i);
+                    displayBooks(myLibrary);
+                }
+                else
+                {
+                    myLibrary.pop();
+                    localStorage.clear();
+                }
+            }
         }
+    }
+    else
+    {
+        return 0;
     }
 }
