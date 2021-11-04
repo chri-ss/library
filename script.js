@@ -76,7 +76,14 @@ submit.addEventListener('click', (e) => {
 
     for(i = 0; i < inputs.length - 1; ++i)
     {
-        newBook[inputs[i].name] = inputs[i].value
+        if(inputs[i].value === '')
+        {
+            return false;
+        }
+        else
+        {
+            newBook[inputs[i].name] = inputs[i].value
+        }
     }
     newBook.read = read.checked;
     console.log(newBook);
