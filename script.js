@@ -83,6 +83,7 @@ submit.addEventListener('click', (e) => {
         else
         {
             newBook[inputs[i].name] = inputs[i].value
+            inputs[i].value = '';
         }
     }
     newBook.read = read.checked;
