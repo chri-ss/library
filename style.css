@@ -64,14 +64,14 @@ h3 {
     font-family: "Bebas Neue", sans-serif;
 }
 
-.delete, .read-button {
+.delete, .read-button, .submit, .cancel {
     order: 1;
     width: 80%;
     border: none;
     border-radius: 5px;
     background-color: #4d6a4f;
     color: #fff;
-    font-family: inherit;
+    font-family: "Bebas Neue", sans-serif;
     padding: 0.4rem;
     cursor: pointer;
 }
@@ -122,13 +122,19 @@ a {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: rgb(191, 216, 203);
-    border: 2px solid #4d6a4f;
+    border: 2px solid black;
     border-radius: 5px;
     text-align: center;
 }
 
 .modal-content  {
-    padding: 5rem;
+    padding: 2rem;
+}
+
+.buttons {
+    display: flex;
+    gap: 1rem;
+    padding: 5%;
 }
 
 .inputs {
@@ -136,7 +142,7 @@ a {
     flex-direction: column;
     align-items: center;
     height: 100%;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
 .input {
