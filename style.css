@@ -19,12 +19,12 @@ body {
     padding: 1rem;
 }
 
-h2, a{
+h2{
     font-size: 36px;
     font-weight: bold;
     text-decoration: none;
     color: #e0ded0;
-    font-family: "Press start 2P";
+    font-family: "Press start 2P", sans-serif;
 }
 
 h3 {
@@ -68,21 +68,30 @@ h3 {
     width: 80%;
     border: none;
     border-radius: 5px;
-    background-color: #A4C3A5;
+    background-color: #4d6a4f;
+    color: #fff;
     font-family: inherit;
     padding: 0.4rem;
     cursor: pointer;
 }
 
 .add {
-    height: 20vh;
-    width: 20vh;
-    border: 1px solid rgb(42, 42, 42);
-    border-radius: 50%;
-    background-color: rgb(224, 223, 223);
-    color: rgb(105, 105, 105);
-    font-size: 100px;
+    height: 10vh;
+    width: 10vw;
+    font-size: 18px;
     text-align: center;
+    border: none;
+    border-radius: 5px;
+    background-color: #4d6a4f;
+    color: #fff;
+    font-family: inherit;
+    padding: 0.4rem;
+    cursor: pointer;
+    font-family: "Bebas Neue", sans-serif;
+}
+
+.delete:hover, .read-button:hover, .add:hover    {
+    background-color: #50a856;
 }
 
 .footer {
@@ -90,6 +99,18 @@ h3 {
     display: flex;
     justify-content: center;
     padding: 1rem;
+}
+
+.link-container  {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+a {
+    font-size: 18px;
+    color:#fff;
+    font-family: "Press start 2P", sans-serif;
 }
 
 .modal {
