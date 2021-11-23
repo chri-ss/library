@@ -3,6 +3,15 @@ const modal = document.querySelector('.modal');
 const submit = document.querySelector('.submit');
 const bookRepository = document.querySelector('.book-repository')
 
+class Book {
+    constructor(title, author, pages, read) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+    }
+}
+
 let myLibrary = [];
 for(i = 0; i < localStorage.length; ++i)
 {
@@ -60,8 +69,6 @@ deleteButtons.forEach(button => {
 })
 }
 
-const read = document.querySelector('.read')
-
 let inputs = Array.from(document.querySelectorAll('.inputs input'));
 
 addButton.addEventListener('click', () =>  {
@@ -71,21 +78,13 @@ addButton.addEventListener('click', () =>  {
 submit.addEventListener('click', (e) => {
     e.preventDefault();
 
-    let newBook = Object.create(Book);
-    const read = document.querySelector('.read')
+    let newBook = new Book(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value)
 
     for(i = 0; i < inputs.length - 1; ++i)
     {
-        if(inputs[i].value === '')
-        {
-            return false;
-        }
-        else
-        {
-            newBook[inputs[i].name] = inputs[i].value
-            inputs[i].value = '';
-        }
+        inputs[i].value = '';
     }
+    const read = document.querySelector('.read')
     newBook.read = read.checked;
     console.log(newBook);
     myLibrary.push(newBook);
@@ -100,17 +99,6 @@ submit.addEventListener('click', (e) => {
     displayBooks(myLibrary);
     modal.style.display = 'none';
 })
-
-function Book(title, author, pages, read)
-{
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
-    this.info = function() {
-        return `${title} by ${author}, ${pages} pages, ${read} read yet.`
-    }
-}
 
 function addBookToLibrary(book) {
     myLibrary.push(book)
