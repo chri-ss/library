@@ -10,9 +10,56 @@ class Book {
         this.pages = pages;
         this.read = read;
     }
+
+    static readToggle() {
+        if(this.read === true)
+            {
+                this.read = false;
+            }
+            else if(this.read === false)
+            {
+                this.read = true;
+            }
+            for(let i = 0; i < myLibrary.library.length; ++i)
+            {
+                localStorage.setItem(i, JSON.stringify(myLibrary[i]));
+            }
+            Display.displayBooks(myLibrary.library);
+    }
 }
 
 class Display {
+
+    static displayBooks(bookArray) {
+        Library.clearLibrary();
+        for(let i = 0; i < bookArray.length; ++i)
+        {
+            localStorage.setItem(i, JSON.stringify(myLibrary.library[i]));
+        }
+        
+        let i = 0;
+    
+        bookRepository.removeChild(addButton);
+        bookArray.forEach(book => {
+        let newDiv = document.createElement('div');
+        Display.makeNewCard(newDiv);
+        for(let key in book)
+        {
+            if(key === 'title')
+            {
+                Display.makeCardTitle(book, key, newDiv);
+            }
+            else if(key === 'pages' || key === 'author' || key === 'read')
+            {
+                Display.makeCardSubField(book, key, newDiv);
+            }
+        }
+        Display.addReadToggleButton(newDiv, i);
+        Display.addDeleteButton(newDiv, i);
+        ++i;
+        bookRepository.appendChild(addButton);
+        })  
+    }
 
     static makeNewCard(div) {
         div.classList.add('card');
@@ -70,36 +117,6 @@ class Library {
         }
     }
 
-    static displayBooks(bookArray) {
-        Library.clearLibrary();
-        for(let i = 0; i < myLibrary.library.length; ++i)
-        {
-            localStorage.setItem(i, JSON.stringify(myLibrary.library[i]));
-        }
-        
-        let i = 0;
-    
-        bookRepository.removeChild(addButton);
-        myLibrary.library.forEach(book => {
-        let newDiv = document.createElement('div');
-        Display.makeNewCard(newDiv);
-        for(let key in book)
-        {
-            if(key === 'title')
-            {
-                Display.makeCardTitle(book, key, newDiv);
-            }
-            else if(key === 'pages' || key === 'author' || key === 'read')
-            {
-                Display.makeCardSubField(book, key, newDiv);
-            }
-        }
-        Display.addReadToggleButton(newDiv, i);
-        Display.addDeleteButton(newDiv, i);
-        ++i;
-        })  
-    }
-
     static addBookToLibrary(book) {
         myLibrary.push(book)
         return myLibrary;
@@ -113,59 +130,51 @@ class Library {
     }
 
     static addReadToggle(library) {
-        if(library[0] != null)
+
+        for(let i = 0; i < library.length; ++i)
         {
-            for (let i = 0; i < library.length; ++i)
-            {
-                library[i].readToggle = function() {
-                if(this.read === true)
-                {
-                    this.read = false;
-                }
-                else if(this.read === false)
-                {
-                    this.read = true;
-                }
-                for(let i = 0; i < myLibrary.length; ++i)
-                {
-                    localStorage.setItem(i, JSON.stringify(myLibrary[i]));
-                }
-                displayBooks(myLibrary);
-            }
+            Object.setPrototypeOf(library[i], Book)
         }
     }
-    else
-    {
-        return 0;
-    }
-    }
     
-    static addDeleteBook(library, i) {
-        if(library[0] != null)
+    static DeleteBook(library, i) {
+        if(library.length > 1)
         {
-            for(let i = 0; i < library.length; ++i)
-            {
-                library[i].delete = function() {
-                    if(library.length != 1)
-                    {
-                        myLibrary.splice(i, 1);
-                        localStorage.removeItem(i);
-                        displayBooks(myLibrary);
-                        addDeleteBook(myLibrary);
-                    }
-                    else
-                    {
-                        myLibrary.pop();
-                        localStorage.clear();
-                        displayBooks(myLibrary);
-                    }
-                }
-            }
+            myLibrary.library.splice(i, 1);
+            localStorage.removeItem(i);
+            Display.displayBooks(myLibrary.library);
         }
         else
         {
-            return 0;
+            myLibrary.library.pop();
+            localStorage.clear();
+            Display.displayBooks(myLibrary.library);
         }
+    }
+
+    static addReadToggleEventListener() {
+        let readToggleButtons = Array.from(document.querySelectorAll('.read-button'));
+
+        readToggleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+        myLibrary.library[button.classList[0]].readToggle();
+        Library.addReadToggleEventListener();
+        Library.addDeleteEventListener();
+        })
+    })
+    }
+
+    static addDeleteEventListener() {
+        let deleteButtons = Array.from(document.querySelectorAll('.delete'));
+
+        deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+        Library.DeleteBook(myLibrary.library, button.classList[0] )
+        Display.displayBooks(myLibrary.library);
+        Library.addDeleteEventListener();
+        Library.addReadToggleEventListener();
+        })
+    })
     }
 }
 
@@ -173,27 +182,12 @@ let myLibrary = new Library;
 
 Library.pullBooksFromLocalStorage(myLibrary.library);
 Library.addReadToggle(myLibrary.library);
-Library.addDeleteBook(myLibrary.library);
-Library.displayBooks(myLibrary.library);
+Display.displayBooks(myLibrary.library);
 
 bookRepository.appendChild(addButton);
 
-let readToggleButtons = Array.from(document.querySelectorAll('.read-button'));
-
-readToggleButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        myLibrary[button.classList[0]].readToggle();
-    })
-})
-
-let deleteButtons = Array.from(document.querySelectorAll('.delete'));
-
-deleteButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        myLibrary[button.classList[0]].delete();
-        displayBooks(myLibrary);
-    })
-})
+Library.addReadToggleEventListener();
+Library.addDeleteEventListener();
 
 let inputs = Array.from(document.querySelectorAll('.inputs input'));
 
@@ -218,11 +212,12 @@ submit.addEventListener('click', (e) => {
 
     for(let i = 0; i < myLibrary.length; ++i)
     {
-        localStorage.setItem(i, JSON.stringify(myLibrary[i]));
+        localStorage.setItem(i, JSON.stringify(myLibrary.library[i]));
     }
-    Library.addReadToggle(myLibrary);
-    Library.addDeleteBook(myLibrary);
-    Library.displayBooks(myLibrary);
+    Library.addReadToggle(myLibrary.library);
+    Display.displayBooks(myLibrary.library);
+    Library.addReadToggleEventListener();
+    Library.addDeleteEventListener();
     bookRepository.appendChild(addButton);
     modal.style.display = 'none';
 })
