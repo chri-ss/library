@@ -3,64 +3,191 @@ const modal = document.querySelector('.modal');
 const submit = document.querySelector('.submit');
 const bookRepository = document.querySelector('.book-repository')
 
-let myLibrary = [];
-for(i = 0; i < localStorage.length; ++i)
-{
-    myLibrary.push(JSON.parse(localStorage.getItem(i)));
-}
-addReadToggle(myLibrary);
-addDeleteBook(myLibrary);
-displayBooks(myLibrary);
+class Book {
+    constructor(title, author, pages, read) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+    }
 
-function displayBooks(bookArray) {
-    clearLibrary();
-    for(let i = 0; i < myLibrary.length; ++i)
-    {
-        localStorage.setItem(i, JSON.stringify(myLibrary[i]));
+    static readToggle() {
+        if(this.read === true)
+            {
+                this.read = false;
+            }
+            else if(this.read === false)
+            {
+                this.read = true;
+            }
+            for(let i = 0; i < myLibrary.library.length; ++i)
+            {
+                localStorage.setItem(i, JSON.stringify(myLibrary[i]));
+            }
+            Display.displayBooks(myLibrary.library);
+    }
+}
+
+class Display {
+
+    static displayBooks(bookArray) {
+        Library.clearLibrary();
+        for(let i = 0; i < bookArray.length; ++i)
+        {
+            localStorage.setItem(i, JSON.stringify(myLibrary.library[i]));
+        }
+        
+        let i = 0;
+    
+        bookRepository.removeChild(addButton);
+        bookArray.forEach(book => {
+        let newDiv = document.createElement('div');
+        Display.makeNewCard(newDiv);
+        for(let key in book)
+        {
+            if(key === 'title')
+            {
+                Display.makeCardTitle(book, key, newDiv);
+            }
+            else if(key === 'pages' || key === 'author' || key === 'read')
+            {
+                Display.makeCardSubField(book, key, newDiv);
+            }
+        }
+        Display.addReadToggleButton(newDiv, i);
+        Display.addDeleteButton(newDiv, i);
+        ++i;
+        bookRepository.appendChild(addButton);
+        })  
+    }
+
+    static makeNewCard(div) {
+        div.classList.add('card');
+        bookRepository.appendChild(div);
+    }
+
+    static addDeleteButton(div, i) {
+        let deleteButton = document.createElement('button');
+        deleteButton.classList.add(`${i}`);
+        deleteButton.textContent = 'Delete';
+        deleteButton.classList.add('delete');
+        div.appendChild(deleteButton);
+    }
+
+    static makeCardTitle(book, key, div) {
+        let bookTitle = document.createElement('h3');
+        bookTitle.textContent = book[key];
+        div.appendChild(bookTitle)
+    }
+
+    static makeCardSubField(book, key, div) {
+        let bookField = document.createElement('p');
+        if(key === 'author')
+        {
+            bookField.textContent = `by ${book[key]}`;
+        }
+        else if(key === 'pages')
+        {
+            bookField.textContent = `${book[key]} pages`;
+        }
+        else if(key === 'read')
+        {
+            book[key] === true ? bookField.textContent = 'read' : bookField.textContent = 'not yet read';
+        }
+        div.appendChild(bookField);
+    }
+
+    static addReadToggleButton(div, i) {
+        let read = document.createElement('button');
+        read.classList.add(`${i}`);
+        read.textContent = 'read?';
+        read.classList.add('read-button');
+    
+        div.appendChild(read);
+    }
+}
+
+class Library {
+    library = [];
+
+    static pullBooksFromLocalStorage() {
+        for(let i = 0; i < localStorage.length; ++i)
+        {
+            myLibrary.library.push(JSON.parse(localStorage.getItem(i)));
+        }
+    }
+
+    static addBookToLibrary(book) {
+        myLibrary.push(book)
+        return myLibrary;
+    }
+
+    static clearLibrary() {
+        const clearBooks = Array.from(bookRepository.querySelectorAll('.card'));
+        clearBooks.forEach(book => {
+        bookRepository.removeChild(book);
+        })
+    }
+
+    static addReadToggle(library) {
+
+        for(let i = 0; i < library.length; ++i)
+        {
+            Object.setPrototypeOf(library[i], Book)
+        }
     }
     
-    let i = 0;
-
-    bookRepository.removeChild(addButton);
-    bookArray.forEach(book => {
-    let newDiv = document.createElement('div');
-    makeNewCard(newDiv);
-    for(key in book)
-    {
-        if(key === 'title')
+    static DeleteBook(library, i) {
+        if(library.length > 1)
         {
-            makeCardTitle(book, key, newDiv);
+            myLibrary.library.splice(i, 1);
+            localStorage.removeItem(i);
+            Display.displayBooks(myLibrary.library);
         }
-        else if(key === 'pages' || key === 'author' || key === 'read')
+        else
         {
-            makeCardSubField(book, key, newDiv);
+            myLibrary.library.pop();
+            localStorage.clear();
+            Display.displayBooks(myLibrary.library);
         }
     }
-    addReadToggleButton(newDiv, i);
-    addDeleteButton(newDiv, i);
-    ++i;
-})
-bookRepository.appendChild(addButton);
 
-let readToggleButtons = Array.from(document.querySelectorAll('.read-button'));
+    static addReadToggleEventListener() {
+        let readToggleButtons = Array.from(document.querySelectorAll('.read-button'));
 
-readToggleButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        myLibrary[button.classList[0]].readToggle();
+        readToggleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+        myLibrary.library[button.classList[0]].readToggle();
+        Library.addReadToggleEventListener();
+        Library.addDeleteEventListener();
+        })
     })
-})
+    }
 
-let deleteButtons = Array.from(document.querySelectorAll('.delete'));
+    static addDeleteEventListener() {
+        let deleteButtons = Array.from(document.querySelectorAll('.delete'));
 
-deleteButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        myLibrary[button.classList[0]].delete();
-        displayBooks(myLibrary);
+        deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+        Library.DeleteBook(myLibrary.library, button.classList[0] )
+        Display.displayBooks(myLibrary.library);
+        Library.addDeleteEventListener();
+        Library.addReadToggleEventListener();
+        })
     })
-})
+    }
 }
 
-const read = document.querySelector('.read')
+let myLibrary = new Library;
+
+Library.pullBooksFromLocalStorage(myLibrary.library);
+Library.addReadToggle(myLibrary.library);
+Display.displayBooks(myLibrary.library);
+
+bookRepository.appendChild(addButton);
+
+Library.addReadToggleEventListener();
+Library.addDeleteEventListener();
 
 let inputs = Array.from(document.querySelectorAll('.inputs input'));
 
@@ -71,156 +198,26 @@ addButton.addEventListener('click', () =>  {
 submit.addEventListener('click', (e) => {
     e.preventDefault();
 
-    let newBook = Object.create(Book);
-    const read = document.querySelector('.read')
+    let newBook = new Book(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value)
 
     for(i = 0; i < inputs.length - 1; ++i)
     {
-        if(inputs[i].value === '')
-        {
-            return false;
-        }
-        else
-        {
-            newBook[inputs[i].name] = inputs[i].value
-            inputs[i].value = '';
-        }
+        inputs[i].value = '';
     }
+    const read = document.querySelector('.read')
     newBook.read = read.checked;
     console.log(newBook);
-    myLibrary.push(newBook);
+    myLibrary.library.push(newBook);
     localStorage.clear();
 
     for(let i = 0; i < myLibrary.length; ++i)
     {
-        localStorage.setItem(i, JSON.stringify(myLibrary[i]));
+        localStorage.setItem(i, JSON.stringify(myLibrary.library[i]));
     }
-    addReadToggle(myLibrary);
-    addDeleteBook(myLibrary);
-    displayBooks(myLibrary);
+    Library.addReadToggle(myLibrary.library);
+    Display.displayBooks(myLibrary.library);
+    Library.addReadToggleEventListener();
+    Library.addDeleteEventListener();
+    bookRepository.appendChild(addButton);
     modal.style.display = 'none';
 })
-
-function Book(title, author, pages, read)
-{
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
-    this.info = function() {
-        return `${title} by ${author}, ${pages} pages, ${read} read yet.`
-    }
-}
-
-function addBookToLibrary(book) {
-    myLibrary.push(book)
-    return myLibrary;
-}
-
-function clearLibrary() {
-    const clearBooks = Array.from(bookRepository.querySelectorAll('.card'));
-    clearBooks.forEach(book => {
-    bookRepository.removeChild(book);
-})
-}
-
-function makeNewCard(div) {
-    div.classList.add('card');
-    bookRepository.appendChild(div);
-}
-
-function addDeleteButton(div, i) {
-    let deleteButton = document.createElement('button');
-    deleteButton.classList.add(`${i}`);
-    deleteButton.textContent = 'Delete';
-    deleteButton.classList.add('delete');
-    div.appendChild(deleteButton);
-}
-
-function makeCardTitle(book, key, div) {
-    let bookTitle = document.createElement('h3');
-    bookTitle.textContent = book[key];
-    div.appendChild(bookTitle)
-}
-
-function makeCardSubField(book, key, div) {
-    let bookField = document.createElement('p');
-    if(key === 'author')
-    {
-        bookField.textContent = `by ${book[key]}`;
-    }
-    else if(key === 'pages')
-    {
-        bookField.textContent = `${book[key]} pages`;
-    }
-    else if(key === 'read')
-    {
-        book[key] === true ? bookField.textContent = 'read' : bookField.textContent = 'not yet read';
-    }
-    div.appendChild(bookField);
-}
-
-function addReadToggleButton(div, i) {
-    let read = document.createElement('button');
-    read.classList.add(`${i}`);
-    read.textContent = 'read?';
-    read.classList.add('read-button');
-
-    div.appendChild(read);
-}
-
-function addReadToggle(library) {
-    if(library[0] != null)
-    {
-        for (let i = 0; i < library.length; ++i)
-        {
-            library[i].readToggle = function() {
-            if(this.read === true)
-            {
-                this.read = false;
-            }
-            else if(this.read === false)
-            {
-                this.read = true;
-            }
-            for(let i = 0; i < myLibrary.length; ++i)
-            {
-                localStorage.setItem(i, JSON.stringify(myLibrary[i]));
-            }
-            displayBooks(myLibrary);
-        }
-    }
-}
-else
-{
-    return 0;
-}
-}
-
-function addDeleteBook(library, i) {
-    if(library[0] != null)
-    {
-        for(let i = 0; i < library.length; ++i)
-        {
-            library[i].delete = function() {
-                if(library.length != 1)
-                {
-                    myLibrary.splice(i, 1);
-                    localStorage.removeItem(i);
-                    displayBooks(myLibrary);
-                    addDeleteBook(myLibrary);
-                }
-                else
-                {
-                    myLibrary.pop();
-                    localStorage.clear();
-                    displayBooks(myLibrary);
-                }
-            }
-        }
-    }
-    else
-    {
-        return 0;
-    }
-}
