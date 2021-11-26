@@ -38,8 +38,14 @@ class Display {
         }
         
         let i = 0;
-    
-        bookRepository.removeChild(addButton);
+        if(bookRepository.contains(addButton))
+        {
+            bookRepository.removeChild(addButton);
+        }
+        else
+        {
+            bookRepository.appendChild(addButton);
+        }
         bookArray.forEach(book => {
         let newDiv = document.createElement('div');
         Display.makeNewCard(newDiv);
@@ -137,7 +143,7 @@ class Library {
         }
     }
     
-    static DeleteBook(library, i) {
+    static deleteBook(library, i) {
         if(library.length > 1)
         {
             myLibrary.library.splice(i, 1);
@@ -152,27 +158,27 @@ class Library {
         }
     }
 
-    static addReadToggleEventListener() {
+    static addReadToggleEventListeners() {
         let readToggleButtons = Array.from(document.querySelectorAll('.read-button'));
 
         readToggleButtons.forEach(button => {
         button.addEventListener('click', () => {
         myLibrary.library[button.classList[0]].readToggle();
-        Library.addReadToggleEventListener();
-        Library.addDeleteEventListener();
+        Library.addReadToggleEventListeners();
+        Library.addDeleteEventListeners();
         })
     })
     }
 
-    static addDeleteEventListener() {
+    static addDeleteEventListeners() {
         let deleteButtons = Array.from(document.querySelectorAll('.delete'));
 
         deleteButtons.forEach(button => {
         button.addEventListener('click', () => {
-        Library.DeleteBook(myLibrary.library, button.classList[0] )
+        Library.deleteBook(myLibrary.library, button.classList[0] )
         Display.displayBooks(myLibrary.library);
-        Library.addDeleteEventListener();
-        Library.addReadToggleEventListener();
+        Library.addDeleteEventListeners();
+        Library.addReadToggleEventListeners();
         })
     })
     }
@@ -186,8 +192,8 @@ Display.displayBooks(myLibrary.library);
 
 bookRepository.appendChild(addButton);
 
-Library.addReadToggleEventListener();
-Library.addDeleteEventListener();
+Library.addReadToggleEventListeners();
+Library.addDeleteEventListeners();
 
 let inputs = Array.from(document.querySelectorAll('.inputs input'));
 
@@ -216,8 +222,8 @@ submit.addEventListener('click', (e) => {
     }
     Library.addReadToggle(myLibrary.library);
     Display.displayBooks(myLibrary.library);
-    Library.addReadToggleEventListener();
-    Library.addDeleteEventListener();
+    Library.addReadToggleEventListeners();
+    Library.addDeleteEventListeners();
     bookRepository.appendChild(addButton);
     modal.style.display = 'none';
 })
