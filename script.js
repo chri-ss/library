@@ -100,15 +100,10 @@ class Display {
 class Library {
   library = [];
 
-  static pullBooksFromLocalStorage() {
+  pullBooksFromLocalStorage() {
     for (let i = 0; i < localStorage.length; ++i) {
-      myLibrary.library.push(JSON.parse(localStorage.getItem(i)));
+      this.library.push(JSON.parse(localStorage.getItem(i)));
     }
-  }
-
-  static addBookToLibrary(book) {
-    myLibrary.push(book);
-    return myLibrary;
   }
 
   static clearLibrary() {
@@ -118,19 +113,19 @@ class Library {
     });
   }
 
-  static addReadToggle(library) {
-    for (let i = 0; i < library.length; ++i) {
-      Object.setPrototypeOf(library[i], Book);
+  addReadToggle() {
+    for (let i = 0; i < this.library.length; ++i) {
+      Object.setPrototypeOf(this.library[i], Book);
     }
   }
 
-  static deleteBook(library, i) {
-    if (library.length > 1) {
-      myLibrary.library.splice(i, 1);
+  deleteBook(i) {
+    if (this.library.length > 1) {
+      this.library.splice(i, 1);
       localStorage.removeItem(i);
-      Display.displayBooks(myLibrary.library);
+      Display.displayBooks(this.library);
     } else {
-      myLibrary.library.pop();
+      this.library.pop();
       localStorage.clear();
       Display.displayBooks(myLibrary.library);
     }
@@ -155,7 +150,7 @@ class Library {
 
     deleteButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        Library.deleteBook(myLibrary.library, button.classList[0]);
+        myLibrary.deleteBook(button.classList[0]);
         Display.displayBooks(myLibrary.library);
         Library.addDeleteEventListeners();
         Library.addReadToggleEventListeners();
@@ -166,8 +161,10 @@ class Library {
 
 let myLibrary = new Library();
 
-Library.pullBooksFromLocalStorage(myLibrary.library);
-Library.addReadToggle(myLibrary.library);
+// Library.pullBooksFromLocalStorage(myLibrary.library);
+myLibrary.pullBooksFromLocalStorage();
+// Library.addReadToggle(myLibrary.library);
+myLibrary.addReadToggle();
 Display.displayBooks(myLibrary.library);
 
 bookRepository.appendChild(addButton);
@@ -203,7 +200,7 @@ form.addEventListener("submit", (e) => {
   for (let i = 0; i < myLibrary.length; ++i) {
     localStorage.setItem(i, JSON.stringify(myLibrary.library[i]));
   }
-  Library.addReadToggle(myLibrary.library);
+  myLibrary.addReadToggle();
   Display.displayBooks(myLibrary.library);
   Library.addReadToggleEventListeners();
   Library.addDeleteEventListeners();
