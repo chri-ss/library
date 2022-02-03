@@ -207,3 +207,24 @@ form.addEventListener("submit", (e) => {
   bookRepository.appendChild(addButton);
   modal.style.display = "none";
 });
+
+inputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    input.setCustomValidity("");
+    input.checkValidity();
+
+    input.addEventListener("invalid", () => {
+      if (input.value === "") {
+        if(input.name === 'title') {
+          input.setCustomValidity('Please enter a title (max 60 characters)');
+        }
+        else if(input.name === 'author') {
+          input.setCustomValidity('Please enter a name for the author (max 40 characters');
+        }
+        else if(input.name === 'pages') {
+          input.setCustomValidity('Number of pages must be less than 10000');
+        }
+      }
+    });
+  });
+});

@@ -27,11 +27,11 @@
             <div class="modal-content">
                 <form class="inputs">
                     <label>Title</label>
-                    <input type="text" class="title" name="title" required>
+                    <input type="text" class="title" name="title" maxlength="60" required>
                     <label>Author</label>                    
-                    <input type="text" class= "author" name="author" required>
+                    <input type="text" class= "author" name="author" maxlength="40" required>
                     <label># of Pages</label>
-                    <input type="text" class="pages" name="pages" required>
+                    <input type="number" class="pages" name="pages" min="0" max="10000" required>
                     <label>Read?</label>
                     <input type="checkbox"  class="read" name="read">
                     <div class="buttons">
